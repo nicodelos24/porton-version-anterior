@@ -1,0 +1,146 @@
+/* =============================================================
+   layout/transicion.css
+   Capa 4 — Bandas que separan las secciones grandes
+   -------------------------------------------------------------
+   Franja de imagen a todo el ancho, con el texto centrado encima.
+   El mismo motivo que la portada: la foto va de fondo y encima un
+   velo oscuro, porque es lo único que garantiza que el texto se lea
+   pase lo que pase con la foto.
+
+   Hay dos: "La carta", entre "Nosotros" y la galería, y "El local", al
+   cierre antes del pie. Están separadas a propósito: juntas se leían como un
+   solo bloque de fotos en vez de dos respiros.
+   Comparten todo el diseño y solo cambian la foto, que va en una
+   clase aparte. Agregar una tercera banda es agregar dos cosas: un
+   `<section class="transicion transicion--LoQueSea">` en el HTML y su
+   regla de una línea acá abajo.
+
+   Van sobre fotos oscuras, así que declaran sus propios colores y se
+   quedan iguales en los dos temas, igual que el hero y el pie.
+   ============================================================= */
+
+.transicion {
+  /* Colores propios: la banda es oscura en los dos temas. Declarando
+     también `color`, el texto de adentro sale claro: el color se
+     resuelve acá y no heredado desde el body. */
+  --c-texto: var(--c-hueso);
+  --c-texto-suave: #b3a89c;
+  color: var(--c-texto);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Baja y ancha, como la de referencia, pero sin volverse una franja
+     tan baja que la comida quede en un pedacito. */
+  min-height: clamp(16rem, 34vw, 28rem);
+  padding-block: var(--sp-7);
+  overflow: hidden;
+}
+
+/* La foto va en un pseudoelemento, no en la banda, para poder animarla con
+   `transform` (ver el Ken Burns de abajo). El fondo sobre la banda no se puede
+   escalar: `transform` no aplica a imágenes de fondo. */
+.transicion::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* ---- La foto de cada banda ---- */
+.transicion--mollejas::before {
+  background-image: url("../../assets/img/mollejas-con-cremoso.jpg");
+  background-position: center 55%;
+}
+
+.transicion--tortelinis::before {
+  background-image: url("../../assets/img/tortellinis-de-espinaca.jpg");
+  background-position: center 50%;
+}
+
+/* El efecto: un Ken Burns lento y contenido, en vez del "clavado" al scroll.
+
+   Con `background-attachment: fixed` la foto se clavaba en la pantalla y la
+   franja iba mostrando partes distintas al bajar. Como el efecto se repite en
+   la portada, en las bandas y en casi todas las fotos de la galería, el sitio
+   entero parecía temblar. Estas dos bandas son el respiro entre secciones: si
+   se mueven a la velocidad del scroll dejan de serlo.
+
+   Este Ken Burns hace lo mismo (la foto se mueve sola, muy despacio) pero no
+   reacciona al scroll ni da tirones: entra una vez y se queda ahí. Mismo
+   motivo que el hero, que usa la misma idea (ver hero.css). El pseudoelemento
+   siempre queda un poco más grande (empieza en 1.04) para que al escalar nunca
+   se vea el borde.
+
+   Solo en pantallas anchas y si no se pidió menos movimiento. */
+@media (min-width: 1025px) and (prefers-reduced-motion: no-preference) {
+  .transicion::before {
+    animation: transicion-ken-burns 34s var(--ease-in-out) infinite alternate;
+  }
+}
+
+@keyframes transicion-ken-burns {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1.12);
+  }
+}
+
+/* Velo: oscurece la foto para que el texto se lea. Las dos capas
+   juntas, una lateral y otra vertical, evitan que quede una franja
+   clara en el medio donde el texto compite con la comida.
+
+   Los bordes están casi igual de tapados que el centro (63% y 61%
+   contra 61%), porque el texto va siempre en el medio: oscurecer los
+   costados no gana nada y en fotos oscuras los deja completamente
+   negros. Con valores más suaves la comida se ve en toda la franja. */
+.transicion__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgb(10 10 10 / 68%) 0%, rgb(10 10 10 / 44%) 45%, rgb(10 10 10 / 62%) 100%),
+    linear-gradient(to top, rgb(10 10 10 / 52%), rgb(10 10 10 / 18%));
+}
+
+.transicion__content {
+  position: relative;
+  text-align: center;
+}
+
+.transicion__eyebrow {
+  color: var(--c-acento);
+  margin-bottom: var(--sp-3);
+}
+
+.transicion__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  line-height: 1.1;
+  color: var(--c-texto);
+  max-width: 22ch;
+  margin-inline: auto;
+  margin-bottom: var(--sp-6);
+}
+
+.transicion__title em {
+  font-style: italic;
+  color: var(--c-acento);
+}
+
+/* En el celular el título tiene que bajar de tamaño o se parte en tres
+   líneas y la franja queda altísima. */
+@media (max-width: 40rem) {
+  .transicion {
+    min-height: clamp(14rem, 60vw, 18rem);
+    padding-block: var(--sp-6);
+  }
+
+  .transicion__title {
+    max-width: 16ch;
+  }
+}

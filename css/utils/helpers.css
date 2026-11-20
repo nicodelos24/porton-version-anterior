@@ -1,0 +1,144 @@
+/* =============================================================
+   utils/helpers.css
+   Capa 1 — Utilidades transversales
+   -------------------------------------------------------------
+   Clases sin contexto semántico, reusables en cualquier sección.
+   ============================================================= */
+
+/* ---------- Contenedor ---------- */
+.container {
+  width: 100%;
+  max-width: var(--contenedor-max);
+  margin-inline: auto;
+  padding-inline: var(--contenedor-pad);
+}
+
+.container--narrow {
+  max-width: 880px;
+}
+
+/* ---------- Sangría completa ----------
+   Rompe el ancho del contenedor para que el elemento toque los dos bordes de la
+   pantalla. `margin-inline: calc(50% - 50vw)` descuenta la mitad del contenedor
+   y suma la mitad de la ventana: el elemento queda centrado en la pantalla, no
+   en el contenedor.
+
+   Sirve para las fotos de la galería, que con el ancho del contenedor quedan
+   encerradas y pierden la escala de una imagen a todo el ancho. */
+.sangria {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+/* ---------- Secciones ---------- */
+.section {
+  position: relative;
+  padding-block: var(--seccion-pad-y);
+}
+
+.section--alt {
+  background-color: var(--c-bg-alt);
+}
+
+/* ---------- Encabezado de sección ---------- */
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  margin-bottom: clamp(2.5rem, 5vw, 5rem);
+}
+
+.section-title {
+  font-size: var(--fs-2xl);
+}
+
+.section-head--center {
+  align-items: center;
+  text-align: center;
+}
+
+.section-head--center .lead {
+  text-align: center;
+}
+
+/* ---------- Rejillas ---------- */
+.grid {
+  display: grid;
+  gap: var(--sp-5);
+}
+
+.grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+}
+
+.grid--3 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+/* ----------Ícono de llama inline ----------
+   Reemplaza al emoji 🔥 en la copia. Trazo oro/vino (brasa) con un relleno
+   oro muy tenue: sutil sobre hueso y legible sobre el fondo negro del tema
+   oscuro. Cada <path> lleva su color en un `style` inline; acá queda el
+   fallback (`stroke: currentcolor`) y la geometría común.
+
+   `display:inline-block` y `height:1em` son explícitos para vencer al reset
+   global (`svg { display:block; max-width:100%; height:auto }` en base/reset.css),
+   que si no estira el SVG al ancho del párrafo. Sin margin-inline: el espacio
+   entre palabra y llama lo da el propio nodo de texto, sin gaps dobles. */
+.flame-icon {
+  display: inline-block;
+  flex: none;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.12em;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.flame-icon path {
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- Visualmente oculto (accesibilidad) ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Saltea al contenido (teclado) ---------- */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: calc(var(--z-preloader) + 1);
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--c-marca);
+  color: var(--c-hueso);
+  font-size: var(--fs-sm);
+  transform: translateY(-120%);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* ---------- Foco visible consistente ---------- */
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid var(--c-acento);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
